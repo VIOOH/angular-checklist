@@ -10,12 +10,6 @@ var ChecklistDirective = (function () {
         var exist = this.checklist.some(function (val) { return JSON.stringify(obj) === JSON.stringify(val); });
         return exist;
     };
-    ChecklistDirective.prototype.getIndex = function (obj) {
-        this.checklist.some(function (val, key) {
-            if (JSON.stringify(obj) === JSON.stringify(val))
-                return key;
-        });
-    };
     ChecklistDirective.prototype.ngOnChanges = function () {
         if (typeof this.checklistValue === "object") {
             this.isChecked = this.contains(this.checklistValue);
@@ -27,26 +21,13 @@ var ChecklistDirective = (function () {
     ChecklistDirective.prototype.triggerOnChange = function ($event) {
         var target = $event.target;
         var updatedList;
-        var i = null;
-        if (target && target.checked) {
-            if (typeof this.checklistValue === "object") {
-                this.checklist.push(this.checklistValue);
-                updatedList = this.checklist;
-            }
-            else {
-                updatedList = this.checklist.concat([this.checklistValue]);
-            }
+        this.isChecked = target && target.checked ? true : false;
+        if (this.isChecked) {
+            updatedList = this.checklist.concat([this.checklistValue]);
         }
         else {
-            if (typeof this.checklistValue === "object") {
-                i = this.getIndex(this.checklistValue);
-                this.checklist.splice(i, 1);
-                updatedList = this.checklist;
-            }
-            else {
-                i = this.checklist.indexOf(this.checklistValue);
-                updatedList = this.checklist.slice(0, i).concat(this.checklist.slice(i + 1));
-            }
+            var i = this.checklist.indexOf(this.checklistValue);
+            updatedList = this.checklist.slice(0, i).concat(this.checklist.slice(i + 1));
         }
         this.checklistChange.emit(updatedList);
     };

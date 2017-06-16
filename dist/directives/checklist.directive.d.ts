@@ -5,7 +5,6 @@ export declare class ChecklistDirective implements OnChanges {
     checklistChange: EventEmitter<any[]>;
     isChecked: boolean;
     contains(obj: object): boolean;
-    getIndex(obj: object): void;
     ngOnChanges(): void;
     triggerOnChange($event: Event): void;
 }
