@@ -19,16 +19,37 @@ var ChecklistDirective = (function () {
         }
     };
     ChecklistDirective.prototype.triggerOnChange = function ($event) {
+        var _this = this;
         var target = $event.target;
         var updatedList;
-        this.isChecked = target && target.checked ? true : false;
-        if (this.isChecked) {
-            updatedList = this.checklist.concat([this.checklistValue]);
+        if (target && target.checked) {
+            if (typeof this.checklistValue === "object") {
+                this.checklist.push(this.checklistValue);
+                updatedList = this.checklist;
+            }
+            else {
+                updatedList = this.checklist.concat([this.checklistValue]);
+            }
         }
         else {
-            var i = this.checklist.indexOf(this.checklistValue);
-            updatedList = this.checklist.slice(0, i).concat(this.checklist.slice(i + 1));
+            if (typeof this.checklistValue === "object") {
+                var i = this.checklist.findIndex(function (x) { return x.id == _this.checklistValue.id; });
+                this.checklist.splice(i, 1);
+                updatedList = this.checklist;
+            }
+            else {
+                var j = this.checklist.indexOf(this.checklistValue);
+                updatedList = this.checklist.slice(0, j).concat(this.checklist.slice(j + 1));
+            }
         }
+        // this.isChecked = target && target.checked ? true : false;
+        // if (this.isChecked) {
+        //   updatedList = [...this.checklist, this.checklistValue];
+        // }
+        // else {
+        //   const i = this.checklist.indexOf(this.checklistValue);
+        //   updatedList = [...this.checklist.slice(0, i), ...this.checklist.slice(i + 1)];
+        // }
         this.checklistChange.emit(updatedList);
     };
     return ChecklistDirective;

@@ -31,15 +31,33 @@ export class ChecklistDirective implements OnChanges {
   triggerOnChange($event: Event) {
     const target = $event.target as HTMLInputElement;
     let updatedList;
-    this.isChecked = target && target.checked ? true : false;
 
-    if (this.isChecked) {
-      updatedList = [...this.checklist, this.checklistValue];
+    if (target && target.checked) {
+      if (typeof this.checklistValue === "object") {
+        this.checklist.push(this.checklistValue);
+        updatedList = this.checklist;
+      } else {
+        updatedList = [...this.checklist, this.checklistValue];
+      }
+    } else {
+      if (typeof this.checklistValue === "object") {
+        const i = this.checklist.findIndex(x => x.id == this.checklistValue.id);
+        this.checklist.splice(i, 1);
+        updatedList = this.checklist;
+      } else {
+        const j = this.checklist.indexOf(this.checklistValue);
+        updatedList = [...this.checklist.slice(0, j), ...this.checklist.slice(j + 1)];
+      }
     }
-    else {
-      const i = this.checklist.indexOf(this.checklistValue);
-      updatedList = [...this.checklist.slice(0, i), ...this.checklist.slice(i + 1)];
-    }
+    // this.isChecked = target && target.checked ? true : false;
+
+    // if (this.isChecked) {
+    //   updatedList = [...this.checklist, this.checklistValue];
+    // }
+    // else {
+    //   const i = this.checklist.indexOf(this.checklistValue);
+    //   updatedList = [...this.checklist.slice(0, i), ...this.checklist.slice(i + 1)];
+    // }
 
     this.checklistChange.emit(updatedList);
   }
