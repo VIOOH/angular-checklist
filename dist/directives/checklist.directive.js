@@ -22,7 +22,8 @@ var ChecklistDirective = (function () {
         var _this = this;
         var target = $event.target;
         var updatedList;
-        if (target && target.checked) {
+        this.isChecked = target && target.checked ? true : false;
+        if (this.isChecked) {
             if (typeof this.checklistValue === "object") {
                 this.checklist.push(this.checklistValue);
                 updatedList = this.checklist;
@@ -42,14 +43,6 @@ var ChecklistDirective = (function () {
                 updatedList = this.checklist.slice(0, j).concat(this.checklist.slice(j + 1));
             }
         }
-        // this.isChecked = target && target.checked ? true : false;
-        // if (this.isChecked) {
-        //   updatedList = [...this.checklist, this.checklistValue];
-        // }
-        // else {
-        //   const i = this.checklist.indexOf(this.checklistValue);
-        //   updatedList = [...this.checklist.slice(0, i), ...this.checklist.slice(i + 1)];
-        // }
         this.checklistChange.emit(updatedList);
     };
     return ChecklistDirective;

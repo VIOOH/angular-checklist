@@ -32,7 +32,9 @@ export class ChecklistDirective implements OnChanges {
     const target = $event.target as HTMLInputElement;
     let updatedList;
 
-    if (target && target.checked) {
+    this.isChecked = target && target.checked ? true : false;
+
+    if (this.isChecked) {
       if (typeof this.checklistValue === "object") {
         this.checklist.push(this.checklistValue);
         updatedList = this.checklist;
@@ -49,16 +51,6 @@ export class ChecklistDirective implements OnChanges {
         updatedList = [...this.checklist.slice(0, j), ...this.checklist.slice(j + 1)];
       }
     }
-    // this.isChecked = target && target.checked ? true : false;
-
-    // if (this.isChecked) {
-    //   updatedList = [...this.checklist, this.checklistValue];
-    // }
-    // else {
-    //   const i = this.checklist.indexOf(this.checklistValue);
-    //   updatedList = [...this.checklist.slice(0, i), ...this.checklist.slice(i + 1)];
-    // }
-
     this.checklistChange.emit(updatedList);
   }
 }
